@@ -2,26 +2,21 @@ import { Injectable } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import { AxiosBuilder } from 'src/utils/axios.builder';
 import { AxiosHttpOptions, AxiosHeaderOptions } from './types/global.types';
-import { LoggerFactory } from './logger/logger.factory';
+// import logger from './logger/logger';
 
 @Injectable()
 export class GlobalService {
-  private loggerFactory: LoggerFactory;
-  constructor() {
-    this.loggerFactory = LoggerFactory.getInstance('global-service');
-  }
+  // private loggerFactory: LoggerFactory;
+
   axiosCall = async (
     method: AxiosHttpOptions,
     url: string,
-    body: any,
+    body: object,
     headerOptions?: AxiosHeaderOptions[],
-    params?: any,
+    params?: string,
     urlEncoded?: boolean,
-    // language?: string,
-    // clientId?: string,
-    // keyHeader?: string,
   ): Promise<AxiosResponse> => {
-    const builder = new AxiosBuilder()
+    const axios = new AxiosBuilder()
       .setMethod(method)
       .setUrl(url)
       .setBody(body)
@@ -29,6 +24,6 @@ export class GlobalService {
       .setParams(params)
       .enableUrlEncoded(urlEncoded);
 
-    return builder.send();
+    return axios.sendRequest();
   };
 }

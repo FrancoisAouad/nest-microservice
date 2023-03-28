@@ -1,14 +1,14 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import querystring from 'querystring';
-import { LoggerFactory } from 'src/global/logger/logger.factory';
+import logger from 'src/global/logger/logger';
 import { AxiosHeaderOptions, AxiosHttpOptions } from 'src/global/types/global.types';
 
 export class AxiosBuilder {
   private options: AxiosRequestConfig;
-  private loggerFactory: LoggerFactory;
+  // private loggerFactory: LoggerFactory;
 
   constructor() {
-    this.loggerFactory = LoggerFactory.getInstance('axios-calls');
+    // this.loggerFactory = LoggerFactory.getInstance('axios-calls');
     this.options = {
       headers: {
         'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ export class AxiosBuilder {
     return this;
   }
 
-  public async send(): Promise<AxiosResponse> {
+  public async sendRequest(): Promise<AxiosResponse> {
     try {
       const response = await axios(this.options);
       return response;
@@ -66,19 +66,13 @@ export class AxiosBuilder {
       if (err && err.response) {
         const error: any = new Error(JSON.stringify(err.response.data));
         error.status = err.response.status;
-        this.loggerFactory
-          .getLogger('error')
-          .error(
-            `Request failed with status ${error.status} at ${new Date().toISOString()}: ${JSON.stringify(this.options)}. Error message: ${
-              err.message
-            }`,
-            { error },
-          );
+        logger.error(
+          `Request failed with status ${error.status} at ${new Date().toISOString()}: ${JSON.stringify(this.options)}. Error message: ${err.message}`,
+          error,
+        );
         throw error;
       } else {
-        this.loggerFactory
-          .getLogger('error')
-          .error(`Request failed at ${new Date().toISOString()}: ${JSON.stringify(this.options)}. Error message: ${err.message}`, { error: err });
+        logger.error(`Request failed at ${new Date().toISOString()}: ${JSON.stringify(this.options)}. Error message: ${err.message}`, err);
         throw err;
       }
     }
