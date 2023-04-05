@@ -14,12 +14,12 @@ export class SequelizeBuilder implements SequelizeModuleOptions {
   synchronize?: boolean;
 
   constructor(config: ConfigService) {
-    this.dialect = config.get<Dialect>('database.dialect');
+    this.dialect = config.get<Dialect>('database.sequelize.dialect');
     this.host = config.get<string>('database.host');
     this.port = config.get<number>('database.port');
     this.username = config.get<string>('database.user');
     this.password = config.get<string>('database.password');
-    this.database = config.get<string>('database.database');
+    this.database = config.get<string>('database.name');
   }
   setDialect(dialect: Dialect): SequelizeBuilder {
     this.dialect = dialect;
